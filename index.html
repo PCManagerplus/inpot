@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>縦書きテキストエディタ</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'BIZ-UDGothicR';
+            src: url('BIZ-UDGothicR.ttc') format('truetype');
+        }
+        @font-face {
+            font-family: 'UDDigiKyokashoN';
+            src: url('UDDigiKyokashoN-R.ttc') format('truetype');
+        }
+        @font-face {
+            font-family: 'YuGothR';
+            src: url('YuGothR.ttc') format('truetype');
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            border: 1px solid black;
+            padding: 10px;
+            margin: 20px;
+            font-size: 24px;
+        }
+
+        .hgrsmp {
+            font-family: 'BIZ-UDGothicR';
+        }
+
+        .uddigi {
+            font-family: 'UDDigiKyokashoN';
+        }
+
+        .yugothr {
+            font-family: 'YuGothR';
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>フォント選択とテキスト入力</h3>
+        <div class="input-field col s12">
+            <select id="fontSelector">
+                <option value="hgrsmp" selected>BIZ-UDGothicR</option>
+                <option value="uddigi">UDDigiKyokashoN</option>
+                <option value="yugothr">YuGothR</option>
+            </select>
+            <label>フォントを選んでください</label>
+        </div>
+
+        <div class="input-field col s12">
+            <textarea id="inputText" class="materialize-textarea">これは選択したフォントの縦書きテキストです。</textarea>
+            <label for="inputText">テキストを入力してください</label>
+        </div>
+
+        <div id="textContainer" class="vertical-text hgrsmp">
+            これは選択したフォントの縦書きテキストです。
+        </div>
+
+        <button id="exportButton" class="btn">エクスポート</button>
+    </div>
+
+    <!-- jQuery and Materialize JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+
+            document.getElementById('fontSelector').addEventListener('change', function() {
+                var selectedFont = this.value;
+                var textContainer = document.getElementById('textContainer');
+                textContainer.className = 'vertical-text ' + selectedFont;
+            });
+
+            document.getElementById('inputText').addEventListener('input', function() {
+                var inputText = this.value;
+                var textContainer = document.getElementById('textContainer');
+                textContainer.textContent = inputText;
+            });
+
+            document.getElementById('exportButton').addEventListener('click', function() {
+                html2canvas(document.getElementById('textContainer')).then(function(canvas) {
+                    var link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'vertical-text.png';
+                    link.click();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
